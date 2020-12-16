@@ -73,7 +73,12 @@ describe('log routes', () => {
       .put(`/api/v1/logs/${log.id}`)
       .send({ dateOfEvent: '12/15/20', notes: 'Gooooooood', rating: 8, recipeId: recipe.id })
       .then(res => {
-        expect(res.body).toEqual({ dateOfEvent: '12/15/20', notes: 'Gooooooood', rating: 8, recipeId: recipe.id });
+        expect(res.body).toEqual({ 
+          id: expect.any(String),
+          dateOfEvent: '12/15/20', 
+          notes: 'Gooooooood', 
+          rating: 8, 
+          recipeId: recipe.id });
       });
   });
 });
