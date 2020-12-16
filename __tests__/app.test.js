@@ -9,7 +9,7 @@ describe('recipe-lab routes', () => {
     return pool.query(fs.readFileSync('./sql/setup.sql', 'utf-8'));
   });
 
-  it('creates a recipe', () => {
+  it('creates a recipe via POST', () => {
     return request(app)
       .post('/api/v1/recipes')
       .send({
@@ -19,7 +19,12 @@ describe('recipe-lab routes', () => {
           'mix ingredients',
           'put dough on cookie sheet',
           'bake for 10 minutes'
-        ]
+        ],
+        ingredients: [{
+          'amount': '20 ounces',
+          'measurement': 'eyeball it',
+          'name': 'nutmeg'
+        }]
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -35,11 +40,29 @@ describe('recipe-lab routes', () => {
       });
   });
 
-  it('gets all recipes', async() => {
+  it('gets all recipes via GET', async() => {
     const recipes = await Promise.all([
-      { name: 'cookies', directions: [] },
-      { name: 'cake', directions: [] },
-      { name: 'pie', directions: [] }
+      { name: 'cookies', 
+        directions: [],        
+        ingredients: [{
+          'amount': '20 ounces',
+          'measurement': 'eyeball it',
+          'name': 'nutmeg'
+        }] },
+      { name: 'cake', 
+        directions: [],
+        ingredients: [{
+          'amount': '20 ounces',
+          'measurement': 'eyeball it',
+          'name': 'nutmeg'
+        }] },
+      { name: 'pie', 
+        directions: [],
+        ingredients: [{
+          'amount': '20 ounces',
+          'measurement': 'eyeball it',
+          'name': 'nutmeg'
+        }] }
     ].map(recipe => Recipe.insert(recipe)));
 
     return request(app)
@@ -51,7 +74,24 @@ describe('recipe-lab routes', () => {
       });
   });
 
-  it('updates a recipe by id', async() => {
+  it('gets a recipe by id via GET', async() => {
+    const recipe = await Recipe.insert({ 
+      name: 'cookies', 
+      directions: [],        
+      ingredients: [{
+        'amount': '20 ounces',
+        'measurement': 'eyeball it',
+        'name': 'nutmeg'
+      }] });
+
+    return request(app)
+      .get(`/api/v1/recipes/${recipe.id}`)
+      .then(res => {
+        expect(res.body).toEqual(recipe);
+      });
+  });
+
+  it('updates a recipe by id via PUT', async() => {
     const recipe = await Recipe.insert({
       name: 'cookies',
       directions: [
@@ -60,6 +100,11 @@ describe('recipe-lab routes', () => {
         'put dough on cookie sheet',
         'bake for 10 minutes'
       ],
+      ingredients: [{
+        'amount': '20 ounces',
+        'measurement': 'eyeball it',
+        'name': 'nutmeg'
+      }]
     });
 
     return request(app)
@@ -71,12 +116,49 @@ describe('recipe-lab routes', () => {
           'mix ingredients',
           'put dough on cookie sheet',
           'bake for 10 minutes'
-        ]
+        ],
+        ingredients: [{
+          'amount': '20 ounces',
+          'measurement': 'eyeball it',
+          'name': 'nutmeg'
+        }]
       })
       .then(res => {
         expect(res.body).toEqual({
           id: expect.any(String),
           name: 'good cookies',
+          directions: [
+            'preheat oven to 375',
+            'mix ingredients',
+            'put dough on cookie sheet',
+            'bake for 10 minutes'
+          ]
+        });
+      });
+  });
+
+  it('deletes a recipe via DELETE', async() => {
+    const recipe = await Recipe.insert({
+      name: 'cookies',
+      directions: [
+        'preheat oven to 375',
+        'mix ingredients',
+        'put dough on cookie sheet',
+        'bake for 10 minutes'
+      ],
+      ingredients: [{
+        'amount': '20 ounces',
+        'measurement': 'eyeball it',
+        'name': 'nutmeg'
+      }]
+    });
+
+    return request(app)
+      .delete(`/api/v1/recipes/${recipe.id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          id: expect.any(String),
+          name: 'cookies',
           directions: [
             'preheat oven to 375',
             'mix ingredients',
