@@ -81,4 +81,19 @@ describe('log routes', () => {
           recipeId: recipe.id });
       });
   });
+
+  it('deletes a log by id via DELETE', async() => {
+    const log = await Log.insert({ dateOfEvent: '12/10/20', notes: '', rating: 5, recipeId: recipe.id });
+
+    return request(app)
+      .delete(`/api/v1/logs/${log.id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          id: expect.any(String),
+          dateOfEvent: '12/10/20', 
+          notes: '', rating: 5, 
+          recipeId: recipe.id
+        });
+      });
+  });
 });
