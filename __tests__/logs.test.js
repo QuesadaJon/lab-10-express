@@ -13,7 +13,15 @@ describe('log routes', () => {
   let recipe;
 
   beforeEach(async() => {
-    recipe = await Recipe.insert({ name: 'name', directions: [] });
+    recipe = await Recipe.insert({ 
+      name: 'name', 
+      directions: [],        
+      ingredients: [{
+        'amount': '20 ounces',
+        'measurement': 'eyeball it',
+        'name': 'nutmeg'
+      }] 
+    });
   });
 
   afterAll(() => {
