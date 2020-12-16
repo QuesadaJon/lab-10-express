@@ -19,7 +19,12 @@ describe('recipe-lab routes', () => {
           'mix ingredients',
           'put dough on cookie sheet',
           'bake for 10 minutes'
-        ]
+        ],
+        ingredients: [{
+          'amount': '20 ounces',
+          'measurement': 'eyeball it',
+          'name': 'nutmeg'
+        }]
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -37,9 +42,27 @@ describe('recipe-lab routes', () => {
 
   it('gets all recipes via GET', async() => {
     const recipes = await Promise.all([
-      { name: 'cookies', directions: [] },
-      { name: 'cake', directions: [] },
-      { name: 'pie', directions: [] }
+      { name: 'cookies', 
+        directions: [],        
+        ingredients: [{
+          'amount': '20 ounces',
+          'measurement': 'eyeball it',
+          'name': 'nutmeg'
+        }] },
+      { name: 'cake', 
+        directions: [],
+        ingredients: [{
+          'amount': '20 ounces',
+          'measurement': 'eyeball it',
+          'name': 'nutmeg'
+        }] },
+      { name: 'pie', 
+        directions: [],
+        ingredients: [{
+          'amount': '20 ounces',
+          'measurement': 'eyeball it',
+          'name': 'nutmeg'
+        }] }
     ].map(recipe => Recipe.insert(recipe)));
 
     return request(app)
@@ -52,7 +75,14 @@ describe('recipe-lab routes', () => {
   });
 
   it('gets a recipe by id via GET', async() => {
-    const recipe = await Recipe.insert({ name: 'cookies', directions: [] });
+    const recipe = await Recipe.insert({ 
+      name: 'cookies', 
+      directions: [],        
+      ingredients: [{
+        'amount': '20 ounces',
+        'measurement': 'eyeball it',
+        'name': 'nutmeg'
+      }] });
 
     return request(app)
       .get(`/api/v1/recipes/${recipe.id}`)
@@ -70,6 +100,11 @@ describe('recipe-lab routes', () => {
         'put dough on cookie sheet',
         'bake for 10 minutes'
       ],
+      ingredients: [{
+        'amount': '20 ounces',
+        'measurement': 'eyeball it',
+        'name': 'nutmeg'
+      }]
     });
 
     return request(app)
@@ -81,7 +116,12 @@ describe('recipe-lab routes', () => {
           'mix ingredients',
           'put dough on cookie sheet',
           'bake for 10 minutes'
-        ]
+        ],
+        ingredients: [{
+          'amount': '20 ounces',
+          'measurement': 'eyeball it',
+          'name': 'nutmeg'
+        }]
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -106,6 +146,11 @@ describe('recipe-lab routes', () => {
         'put dough on cookie sheet',
         'bake for 10 minutes'
       ],
+      ingredients: [{
+        'amount': '20 ounces',
+        'measurement': 'eyeball it',
+        'name': 'nutmeg'
+      }]
     });
 
     return request(app)
